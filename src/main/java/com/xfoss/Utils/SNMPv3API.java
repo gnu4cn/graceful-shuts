@@ -76,11 +76,11 @@ public class SNMPv3API {
             response = responseEvent.getResponse();
         } catch (Exception e) {
             e.printStackTrace();
-            return "Error: exception happened...";
+            return "Error: 连接 SNMP 对象时失败/Failed to connect to the SNMP server.";
         }
 
         if (response == null) {
-            return "Error: timout...";
+            return new String("Error: 获取 SNMP 数据失败/Failed to fetch SNMP OID data.");
         } else {
             if (response.getErrorStatus() == PDU.noError) {
                 List<? extends VariableBinding> vbs = response.getVariableBindings();
@@ -92,6 +92,8 @@ public class SNMPv3API {
                 return String.format("Error: %s", response.getErrorStatusText());
             }
         }
+
+        return "Complete";
     }
 
     private static UserTarget targetInit(String hostIp, String port, String securityName) {
