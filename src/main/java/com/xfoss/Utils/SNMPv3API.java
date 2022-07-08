@@ -57,7 +57,7 @@ public class SNMPv3API {
         }
     }
 
-    public static void sendRequest(
+    public static String sendRequest(
             String hostIp, 
             String portNo, 
             String columnOid, 
@@ -76,19 +76,20 @@ public class SNMPv3API {
             response = responseEvent.getResponse();
         } catch (Exception e) {
             e.printStackTrace();
+            return "Error: exception happened...";
         }
 
         if (response == null) {
-            System.out.println("TimeOut...");
+            return "Error: timout...";
         } else {
             if (response.getErrorStatus() == PDU.noError) {
                 List<? extends VariableBinding> vbs = response.getVariableBindings();
                 // Vector <? extends VariableBinding> vbs = response.getVariableBindings();
                 for (VariableBinding vb : vbs) {
-                    System.out.format("%s, %s, %s\n", vb, vb.getVariable().getSyntaxString(), vb.getVariable());
+                    return vb.getVariable().toString();
                 }
             } else {
-                System.out.println("Error:" + response.getErrorStatusText());
+                return String.format("Error: %s", response.getErrorStatusText());
             }
         }
     }
