@@ -39,7 +39,7 @@ public class UPSStatus {
 
     UPSStatus(UPS specifiedUPS) {
         ups = specifiedUPS;
-        captueredAt = Date(System.currentTimeMillis());
+        captueredAt = new Date(System.currentTimeMillis());
         gridPowerA = new EnumMap<GridPowerA, Integer>(GridPowerA.class);
         gridPowerB = new EnumMap<GridPowerB, Integer>(GridPowerB.class);
     }

@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.xfoss'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.1'
 sourceCompatibility = '1.8'
 
 repositories {
@@ -14,24 +14,15 @@ repositories {
     }
 }
 
-sourceSets.getByName("main") {
-    java.srcDir("src")
-}
-
 dependencies {
     implementation 'org.snmp4j:snmp4j:3.7.0'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	runtimeOnly 'com.h2database:h2'
-	testImplementation 'org.junit.jupiterorg.junit.jupiter:junit-jupiter-api'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.7.1'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
-}
-
-task run(type: JavaExec, dependsOn: classes) {
-    main = 'com.xfoss.Utils.SNMPv3API'
-    classpath = sourceSets.main.runtimeClasspath
 }
