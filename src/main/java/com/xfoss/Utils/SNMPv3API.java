@@ -47,13 +47,13 @@ public class SNMPv3API {
 
     public static void main(String[] args) {
         for (String oid: columnOids) {
-            sendRequest(
+            System.out.println(sendRequest(
                     "10.12.10.108", 
                     "161", 
                     oid,
                     SNMP_USER,
                     AUTH_KEY,
-                    PRIV_KEY);
+                    PRIV_KEY));
         }
     }
 
