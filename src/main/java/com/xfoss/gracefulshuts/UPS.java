@@ -2,6 +2,7 @@ package com.xfoss.gracefulshuts;
 
 import java.util.Objects;
 import java.net.InetAddress;
+import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,7 +10,7 @@ import javax.persistence.Id;
 
 
 @Entity
-public class UPS {
+public class UPS implements Serializable {
 
     private @Id @GeneratedValue Long id;
     private String name;
