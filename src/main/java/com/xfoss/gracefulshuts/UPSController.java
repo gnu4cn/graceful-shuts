@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.hateoas.EntityModel;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
 class UPSController {
@@ -25,7 +27,11 @@ class UPSController {
 
     @GetMapping("/ups/{id}")
     UPS one(@PathVariable Long id) {
-        return repo.findById(id)
+        UPS ups = repo.findById(id)
             .orElseThrow(() -> new UPSNotFoundException(id));
+
+        return EntityModel<UPS>.of(ups,
+                linkTo(methodOn(UPSController.class).one(id)). withSelfRel(),
+                linkTo(methodOn(UPSController.class).all()).withRel("ups-list"));
     }
 }

@@ -18,6 +18,7 @@ dependencies {
     implementation 'org.snmp4j:snmp4j:3.7.0'
         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
         implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.hateoas:spring-hateoas:1.12.11'
         runtimeOnly 'com.h2database:h2'
         implementation fileTree(dir: 'libs', include: ['*.jar'])
         testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
