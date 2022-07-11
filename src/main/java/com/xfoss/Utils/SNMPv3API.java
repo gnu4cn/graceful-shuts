@@ -7,7 +7,7 @@ import java.util.List;
 import org.snmp4j.PDU;
 import org.snmp4j.ScopedPDU;
 import org.snmp4j.Snmp;
-import org.snmp4j.Target;
+// import org.snmp4j.Target;
 import org.snmp4j.UserTarget;
 import org.snmp4j.event.ResponseEvent;
 import org.snmp4j.mp.MPv3;
@@ -26,10 +26,6 @@ import org.snmp4j.smi.VariableBinding;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
 
 public class SNMPv3API {
-    final static String SNMP_USER = System.getenv("SNMP_ADMIN");
-    final static String AUTH_KEY = System.getenv("SNMP_AUTH_KEY");
-    final static String PRIV_KEY = System.getenv("SNMP_PRIV_KEY");
-
     final static String[] columnOids = new String[] {
         "1.3.6.1.2.1.1.3.0",               // 运行时间？
             "1.3.6.1.2.1.1.5.0",           // UPS 名称
@@ -50,22 +46,19 @@ public class SNMPv3API {
             System.out.println(sendRequest(
                     "10.12.10.108", 
                     "161", 
-                    oid,
-                    SNMP_USER,
-                    AUTH_KEY,
-                    PRIV_KEY));
+                    oid));
         }
     }
 
     public static String sendRequest(
             String hostIp, 
             String portNo, 
-            String columnOid, 
-            String securityName, 
-            String authKey, 
-            String privKey
+            String columnOid
             ) 
     {
+        String securityName = System.getenv("SNMP_ADMIN");
+        String authKey = System.getenv("SNMP_AUTH_KEY");
+        String privKey = System.getenv("SNMP_PRIV_KEY");
         PDU response = new PDU();
         try {
             Snmp snmp = snmpInit(securityName, authKey, privKey);

@@ -2,165 +2,166 @@ package com.xfoss.gracefulshuts;
 
 import java.util.Objects;
 import java.util.Date;
+import java.util.EnumMap;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 
 import com.xfoss.Utils.SNMPv3API;
 
-abstract class GridPower {
-    private int uVoltage;
-    private int vVoltage;
-    private int wVoltage;
-
-    private String uVoltOID;
-    private String vVoltOID;
-    private String wVoltOID;
-
-    public void setUVoltage(int v) {
-        uVoltage = v;
-    }
-
-    public void setVVoltage(int v) {
-        vVoltage = v;
-    }
-
-    public void setWVoltage(int v) {
-        wVoltage = v;
-    }
-
-    public void setUVoltOID(String oid) {
-        uVoltOID = oid;
-    }
-
-    public void setVVoltOID(String oid) {
-        vVoltOID = oid;
-    }
-
-    public void setWVoltOID(String oid) {
-        wVoltOID = oid;
-    }
-
-    public int getUVoltagle() {
-        return uVoltage;
-    }
-
-    public int getVVoltage() {
-        return vVoltage;
-    }
-
-    public int getWVoltage() {
-        return wVoltage;
-    }
-
-    public String getUVoltOID() {
-        return uVoltOID;
-    }
-
-    public String getVVoltOID() {
-        return vVoltOID;
-    }
-
-    public String getWVoltOID() {
-        return wVoltOID;
-    }
-
-    public GridPower(UPS ups, String uVOID, String vVOID, String wVOID) {
-        uVoltage = u;
-        vVoltage = v;
-        wVoltage = w;
-    }
-}
-
-class GridPowerA extends GridPower {
-    private int uFreq;
-    private int vFreq;
-    private int wFreq;
-
-    public void setUFreq(int f) {
-        uFreq = f;
-    }
-
-    public void setVFreq(int f) {
-        vFreq = f;
-    }
-
-    public void setWFreq(int f) {
-        wFreq = f;
-    }
-
-    public int getUFreq() {
-        return uFreq;
-    }
-
-    public int getVFreq() {
-        return vFreq;
-    }
-
-    public int getWFreq() {
-        return wFreq;
-    }
-    
-    public GridPowerA(int uF, int vF, int wF, int uV, int vV, int wV) {
-        super(uV, vV, wV);
-        uFreq = uF;
-        vFreq = vF;
-        wFreq = wF;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("GridPowerA {uFreq=%s, vFreq=%s, wFreq=%s, uVoltage=%s, vVoltage=%s, wVoltage=%s}", 
-                uFreq,
-                vFreq,
-                wFreq,
-                getUVoltagle(),
-                getVVoltage(),
-                getWVoltage());
-    }
-}
-
-class GridPowerB extends GridPower {
-    private int freq;
-
-    public void setFreq(int f) {
-        freq = f;
-    }
-
-    public int getFreq() {
-        return freq;
-    }
-
-    public GridPowerB(int f, int uV, int vV, int wV) {
-        super(uV, vV, wV);
-        freq = f;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("GridPowerB {freq=%s, uVoltage=%s, vVoltage=%s, wVoltage=%s}", 
-                freq,
-                getUVoltagle(),
-                getVVoltage(),
-                getWVoltage());
-    }
+enum Line {
+    U,
+    V,
+    W,
 }
 
 @Entity
 public class UPSStatus {
 
     private @Id @GeneratedValue Long id;
+
+    @ManyToOne
+    @JoinColumns({
+        @JoinColumn(name="UPS_ID", referencedColumnName="ID"),
+        @JoinColumn(name="UPS_name", referencedColumnName="name")
+    })
     private UPS ups;
+
     private Date captueredAt;
     private boolean gridPowerSupply;
-    private GridPowerA gridPowerA;
-    private GridPowerB gridPowerB;
+
+    @Lob
+    private EnumMap<Line, Integer> powerAVolt = new EnumMap<>(Line.class);
+
+    @Lob
+    private EnumMap<Line, Integer> powerAFreq = new EnumMap<>(Line.class);
+    
+    @Lob
+    private EnumMap<Line, Integer> powerBVolt = new EnumMap<>(Line.class);
+
+    private int powerBFreq;
 
     UPSStatus() {}
 
-    UPSStatus(UPS specifiedUPS) {
+    public int getPowerAUV() {
+        return powerAVolt.get(Line.U);
+    }
+
+    public int getPowerAVV() {
+        return powerAVolt.get(Line.V);
+    }
+
+    public int getPowerAWV() {
+        return powerAVolt.get(Line.W);
+    }
+
+    public int getPowerAUF() {
+        return powerAFreq.get(Line.U);
+    }
+
+    public int getPowerAVF() {
+        return powerAFreq.get(Line.V);
+    }
+
+    public int getPowerAWF() {
+        return powerAFreq.get(Line.W);
+    }
+
+    public int getPowerBUV() {
+        return powerAVolt.get(Line.U);
+    }
+
+    public int getPowerBVV() {
+        return powerAVolt.get(Line.V);
+    }
+
+    public int getPowerBWV() {
+        return powerAVolt.get(Line.W);
+    }
+
+    public int getPowerBF() {
+        return powerBFreq;
+    }
+
+    public boolean getGridPowerSupply() {
+        return gridPowerSupply;
+    }
+
+    public Date getCapturedAt() {
+        return captueredAt;
+    }
+
+    public UPS getUPS() {
+        return ups;
+    }
+
+    UPSStatus(
+            UPS specifiedUPS, 
+            EnumMap<Line, String> gridPowerAVOIDs, 
+            EnumMap<Line, String> gridPowerAFOIDs,
+            EnumMap<Line, String> gridPowerBVOIDs,
+            String gridPowerBFOID ) 
+    {
+        String upsIp = specifiedUPS.getIpAddress().getHostAddress();
+
         ups = specifiedUPS;
         captueredAt = new Date(System.currentTimeMillis());
+
+        Set<Line> keys = gridPowerAVOIDs.keySet();
+
+        for(Line key: keys) {
+            powerAVolt.put(key, Integer.parseInt(SNMPv3API.sendRequest(
+                            upsIp,
+                            "161",
+                            gridPowerAVOIDs.get(key)
+                            )));
+            powerAFreq.put(key, Integer.parseInt(SNMPv3API.sendRequest(
+                            upsIp,
+                            "161",
+                            gridPowerAFOIDs.get(key)
+                            )));
+            powerBVolt.put(key, Integer.parseInt(SNMPv3API.sendRequest(
+                            upsIp,
+                            "161",
+                            gridPowerBVOIDs.get(key)
+                            )));
+        }
+
+        powerBFreq = Integer.parseInt(SNMPv3API.sendRequest(
+                    upsIp,
+                    "161",
+                    gridPowerBFOID));
+
+        gridPowerSupply = (getPowerAUV() >= 198) 
+            && (getPowerAVV() >= 198) 
+            && (getPowerAWV() >= 198) 
+            && (getPowerBUV() >= 198) 
+            && (getPowerBVV() >= 198) 
+            && (getPowerBWV() >= 198);
+    }
+    
+
+    @Override
+    public String toString() {
+        return String.format("UPSStatus { UPS: %s, CaptuuredAt: %s, GridPowerA { U_F: %s, V_F: %s, W_F: %s, U_V: %s, V_V: %s, W_V: %s }, GridPowerB { Freq: %s, U_V: %s, V_V: %s, W_V: %s }, gridPowerSupply: %s}", 
+                    getUPS(),
+                    getCapturedAt(),
+                    getPowerAUF(),
+                    getPowerAVF(),
+                    getPowerAWF(),
+                    getPowerAUV(),
+                    getPowerAVV(),
+                    getPowerAWV(),
+                    getPowerBF(),
+                    getPowerBUV(),
+                    getPowerBVV(),
+                    getPowerBWV(),
+                    getGridPowerSupply());
     }
 }
