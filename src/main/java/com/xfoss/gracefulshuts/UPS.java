@@ -6,6 +6,7 @@ import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import com.xfoss.Utils.SNMPv3API;
@@ -18,7 +19,10 @@ public class UPS implements Serializable {
     // https://blog.csdn.net/zlzl8885/article/details/78203295
     // Hibernate 有二级缓存， 缓存会将对象写进硬盘。就必须序列化。以及兼容对象在网络钟的传输。
     //
-    private @Id @GeneratedValue Long id;
+    @Id 
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private  Long id;
+
     private String name;
     private final static String nameOid = "1.3.6.1.2.1.1.5.0";
     private final static String runningTimeOid = "1.3.6.1.2.1.1.3.0";
@@ -44,6 +48,10 @@ public class UPS implements Serializable {
         } catch (Exception e) { e.printStackTrace(); }
     }
 
+    //
+    // https://stackoverflow.com/questions/24936636/while-using-spring-data-rest-after-migrating-an-app-to-spring-boot-i-have-obser
+    // 这些 getters 决定了返回的 JSON 包含哪些字段
+    //
     public String getName() {
         return name;
     }
@@ -54,6 +62,14 @@ public class UPS implements Serializable {
 
     public InetAddress getIpAddress() {
         return ipAddress;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getRunningTime() {
+        return runningTime;
     }
 
     public void setName(String newName) {

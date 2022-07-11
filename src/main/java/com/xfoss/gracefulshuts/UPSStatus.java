@@ -49,6 +49,10 @@ public class UPSStatus {
 
     UPSStatus() {}
 
+    public Long getId() {
+        return id;
+    }
+
     public int getPowerAUV() {
         return powerAVolt.get(Line.U);
     }
