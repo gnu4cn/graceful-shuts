@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+import com.xfoss.Utils.SNMPv3API;
+
 
 @Entity
 public class UPS implements Serializable {
@@ -18,17 +20,27 @@ public class UPS implements Serializable {
     //
     private @Id @GeneratedValue Long id;
     private String name;
+    private final static String nameOid = "1.3.6.1.2.1.1.5.0";
+    private final static String runningTimeOid = "1.3.6.1.2.1.1.3.0";
+    private String runningTime;
     private String nameFQDN;
     private InetAddress ipAddress;
 
     public UPS(){}
 
-    public UPS(String UPSName, String UPSNameFQDN, String UPSIpAddress) {
+    public UPS(String UPSIpAddress) {
 
         try {
-            name = UPSName;
-            nameFQDN = UPSNameFQDN;
             ipAddress = InetAddress.getByName(UPSIpAddress);
+            nameFQDN = ipAddress.getHostName();
+            name = SNMPv3API.sendRequest(
+                    UPSIpAddress,
+                    "161",
+                    nameOid);
+            runningTime = SNMPv3API.sendRequest(
+                    UPSIpAddress,
+                    "161",
+                    runningTimeOid);
         } catch (Exception e) { e.printStackTrace(); }
     }
 
@@ -77,11 +89,12 @@ public class UPS implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("UPS {id=%s, name=%s, nameFQDN=%s, ipAddress=%s}", 
+        return String.format("UPS {id=%s, name=%s, nameFQDN=%s, ipAddress=%s, runningTime=%s}", 
                 id,
                 name,
                 nameFQDN,
-                this.ipAddress.getHostAddress()
+                this.ipAddress.getHostAddress(),
+                runningTime
                 );
     }
 }

@@ -15,7 +15,7 @@ class LoadDatabase {
     @Bean
     CommandLineRunner initDatabase(UPSRepository repo, UPSStatusRepository sRepo) {
         return args -> {
-            UPS ups = new UPS("ups2000", "ups1.senscomm.com", "10.12.10.108");
+            UPS ups = new UPS("10.12.10.108");
 
             EnumMap<Line, String> gridPowerAFOIDs = new EnumMap<>(Line.class);
             gridPowerAFOIDs.put(Line.U, "1.3.6.1.2.1.33.1.3.3.1.2.1");

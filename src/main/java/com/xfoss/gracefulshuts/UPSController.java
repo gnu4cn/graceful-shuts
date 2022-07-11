@@ -22,4 +22,10 @@ class UPSController {
     List<UPS> all() {
         return repo.findAll();
     }
+
+    @GetMapping("/ups/{id}")
+    UPS one(@PathVariable Long id) {
+        return repo.findById(id)
+            .orElseThrow(() -> new UPSNotFoundException(id));
+    }
 }
