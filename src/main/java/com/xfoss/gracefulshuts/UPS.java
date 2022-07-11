@@ -12,6 +12,10 @@ import javax.persistence.Id;
 @Entity
 public class UPS implements Serializable {
 
+    // 
+    // https://blog.csdn.net/zlzl8885/article/details/78203295
+    // Hibernate 有二级缓存， 缓存会将对象写进硬盘。就必须序列化。以及兼容对象在网络钟的传输。
+    //
     private @Id @GeneratedValue Long id;
     private String name;
     private String nameFQDN;
