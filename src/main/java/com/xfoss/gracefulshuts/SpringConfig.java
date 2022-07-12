@@ -55,6 +55,8 @@ class SpringConfig {
         List<UPS> upsList = UPSRepo.findAll();
 
         for (UPS ups: upsList) {
+            ups.setRunningTime();
+            UPSRepo.save(ups);
             log.info(String.format("新的 UPS 状态已记录 - %s", UPSStatusRepo.save(getUPSStatus(ups))));
         }
     }

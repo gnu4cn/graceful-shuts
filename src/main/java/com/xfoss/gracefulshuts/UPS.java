@@ -82,6 +82,13 @@ public class UPS implements Serializable {
         nameFQDN = newNameFQDN;
     }
 
+    public void setRunningTime() {
+        runningTime = SNMPv3API.sendRequest(
+                    ipAddress.getHostAddress(),
+                    "161",
+                    runningTimeOid);
+    }
+
     public void setIpAddress(String newIpAdress) {
         try {
             ipAddress = InetAddress.getByName(newIpAdress);
