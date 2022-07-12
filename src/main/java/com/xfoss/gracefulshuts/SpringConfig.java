@@ -1,7 +1,9 @@
 package com.xfoss.gracefulshuts;
 
+import java.net.InetAddress;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,11 +23,7 @@ class SpringConfig {
         UPSStatusRepo = UPSStatusR;
     }
 
-    private UPS getUPS() {
-        return new UPS("10.12.10.108");
-    }
-
-    private UPSStatus getUPSStatus(UPS ups) {
+    public static UPSStatus getUPSStatus(UPS ups) {
         EnumMap<Line, String> gridPowerAFOIDs = new EnumMap<>(Line.class);
         gridPowerAFOIDs.put(Line.U, "1.3.6.1.2.1.33.1.3.3.1.2.1");
         gridPowerAFOIDs.put(Line.V, "1.3.6.1.2.1.33.1.3.3.1.2.2");
@@ -52,7 +50,7 @@ class SpringConfig {
     }
 
 
-    @Scheduled(fixedRate = 1000 * 60 * 5)
+    @Scheduled(fixedRate = 1000 * 30)
     public void scheduledStatusCapture() {
         List<UPS> upsList = UPSRepo.findAll();
 
@@ -64,9 +62,21 @@ class SpringConfig {
     @Bean
     CommandLineRunner initDatabase() {
         return args -> {
-            UPS ups = getUPS();
-            UPSStatus status = getUPSStatus(ups);
-            log.info(String.format("预加载 %s, %s", UPSRepo.save(ups), UPSStatusRepo.save(status)));
+            UPS ups;
+
+            Optional<UPS> result = UPSRepo.findOneByNameFQDN(InetAddress.getByName("10.12.10.108").getHostName());
+
+            if ( result.isEmpty() ) {
+                ups = new UPS("10.12.10.108");
+                System.out.format("%s, UPS 不存在，新存入 %s", result, ups);
+                log.info(String.format("预加载 - %s, %s", UPSRepo.save(ups), UPSStatusRepo.save(getUPSStatus(ups))));
+
+            } else {
+                ups = result.get();
+                System.out.format("UPS 已存在 - %s", ups);
+                log.info(String.format("预加载 - %s, %s", ups, UPSStatusRepo.save(getUPSStatus(ups))));
+            }
+
         };
     }
 }

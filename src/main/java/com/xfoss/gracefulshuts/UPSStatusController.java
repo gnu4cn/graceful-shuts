@@ -1,6 +1,7 @@
 package com.xfoss.gracefulshuts;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,8 +19,8 @@ class UPSStatusController {
         repo = repository;
     }
 
-    @GetMapping("/ups-status-list")
-    List<UPSStatus> all() {
-        return repo.findAll();
+    @GetMapping("/ups-status-list/{UPSId}")
+    List<UPSStatus> all(@PathVariable UUID UPSId) {
+        return repo.findByUpsId(UPSId);
     }
 }

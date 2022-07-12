@@ -1,5 +1,13 @@
 package com.xfoss.gracefulshuts;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
+import java.util.UUID;
 
-interface UPSStatusRepository extends JpaRepository<UPSStatus, Long> {}
+import org.springframework.data.jpa.repository.JpaRepository;
+// import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
+
+@Transactional
+interface UPSStatusRepository extends JpaRepository<UPSStatus, Long> {
+    public List<UPSStatus> findByUpsId(UUID UpsId);
+}
