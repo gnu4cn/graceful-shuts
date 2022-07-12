@@ -1,12 +1,14 @@
 package com.xfoss.gracefulshuts;
 
 import java.util.Objects;
+import java.util.UUID;
 import java.net.InetAddress;
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+// import javax.persistence.GeneratedValue;
+// import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import com.xfoss.Utils.SNMPv3API;
@@ -20,8 +22,8 @@ public class UPS implements Serializable {
     // Hibernate 有二级缓存， 缓存会将对象写进硬盘。就必须序列化。以及兼容对象在网络钟的传输。
     //
     @Id 
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private  Long id;
+    @Column(name = "id", unique = true, length = 16, nullable = false)
+    private UUID id = UUID.randomUUID();
 
     private String name;
     private final static String nameOid = "1.3.6.1.2.1.1.5.0";
@@ -64,7 +66,7 @@ public class UPS implements Serializable {
         return ipAddress;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 

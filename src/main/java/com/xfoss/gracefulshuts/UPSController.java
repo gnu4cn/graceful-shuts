@@ -1,6 +1,7 @@
 package com.xfoss.gracefulshuts;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,12 +27,13 @@ class UPSController {
     }
 
     @GetMapping("/ups/{id}")
-    UPS one(@PathVariable Long id) {
+    EntityModel<UPS> one(@PathVariable UUID id) {
         UPS ups = repo.findById(id)
             .orElseThrow(() -> new UPSNotFoundException(id));
 
-        return EntityModel<UPS>.of(ups,
+        return EntityModel.of(ups,
                 linkTo(methodOn(UPSController.class).one(id)). withSelfRel(),
-                linkTo(methodOn(UPSController.class).all()).withRel("ups-list"));
+                linkTo(methodOn(UPSController.class).all()).withRel("ups-list")
+                );
     }
 }
