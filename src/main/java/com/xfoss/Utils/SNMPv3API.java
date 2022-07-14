@@ -44,9 +44,9 @@ public class SNMPv3API {
     public static void main(String[] args) {
         for (String oid: columnOids) {
             System.out.println(sendRequest(
-                    "10.12.10.108", 
-                    "161", 
-                    oid));
+                        "10.12.10.108", 
+                        "161", 
+                        oid));
         }
     }
 
@@ -67,6 +67,8 @@ public class SNMPv3API {
             ResponseEvent responseEvent = snmp.send(pdu, target);
 
             response = responseEvent.getResponse();
+
+            snmp.close();
         } catch (Exception e) {
             e.printStackTrace();
             return "Error: 连接 SNMP 对象时失败/Failed to connect to the SNMP server.";

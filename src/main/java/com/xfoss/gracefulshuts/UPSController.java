@@ -33,7 +33,7 @@ class UPSController {
 
         return EntityModel.of(ups,
                 linkTo(methodOn(UPSController.class).one(id)). withSelfRel(),
-                linkTo(methodOn(UPSController.class).all()).withRel("ups-list")
+                linkTo(methodOn(UPSController.class).all()).withRel("/ups-list")
                 );
     }
 }
