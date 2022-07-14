@@ -19,7 +19,7 @@ class UPSStatusController {
         repo = repository;
     }
 
-    @GetMapping("/ups-status-list/{UPSId}")
+    @GetMapping("/gs/api/ups-status-list/{UPSId}")
     List<UPSStatus> all(@PathVariable UUID UPSId) {
         return repo.findByUpsId(UPSId);
     }

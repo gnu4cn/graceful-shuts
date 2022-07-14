@@ -21,12 +21,12 @@ class UPSController {
         repo = repository;
     }
 
-    @GetMapping("/ups-list")
+    @GetMapping("/gs/api/ups-list")
     List<UPS> all() {
         return repo.findAll();
     }
 
-    @GetMapping("/ups/{id}")
+    @GetMapping("/gs/api/ups/{id}")
     EntityModel<UPS> one(@PathVariable UUID id) {
         UPS ups = repo.findById(id)
             .orElseThrow(() -> new UPSNotFoundException(id));
